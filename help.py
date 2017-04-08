@@ -3,7 +3,7 @@
 usage = """
 *** Notes and Comments ***
 
-1. The calculations are based mainly on the two papers:
+1. The calculations are based mainly on two papers:
 
    "Analytical method for calculation of stresses and material 
    birefringence in polarization-maintaining optical fiber"
@@ -13,7 +13,8 @@ usage = """
    "Design and fabrication of low-loss and low-crosstalk polarization-
    maintaining optical fibers," by Y. Sasaki, et al., 
    J. Lightwave Technology, vol. LT-4, No. 8, Aug. 1986, pp.1097-1102.
-   
+
+
    Additional information on stress calculations and birefringence 
    can be found in:
 
