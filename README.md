@@ -5,4 +5,6 @@ This is a calculator for calculating and plotting the stress and birefringence o
 
 This is a Python program that uses the following modules: numpy, matplotlib, iniparse, six, and Tkinter (besides some other standard Python modules).  The main program is <code>pmfiberbiref.py</code>.
 
-(Last updated April 17, 2017)
+<img border="0" width="200px" src="https://3.bp.blogspot.com/-vMcVFujN4X4/VIcZH4HLYpI/AAAAAAAAAZQ/w2tNJ2KaZ8k/s640/panda-stress-tensor-trimmed.png" />
+
+(Last updated Jun 30, 2017)
