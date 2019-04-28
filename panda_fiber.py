@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # Reference: see info in help.py
 # this module implements the stress calculation of panda fibers
+from __future__ import print_function
 import numpy as np
 import sys
 import pylab as plt
@@ -211,7 +212,7 @@ class Stress:
         N = param['N']
         blank_outside=self.blank_outside
         
-        print header," calculate core contribution" # ------------------------------------
+        print( header," calculate core contribution" ) # ------------------------------------
         sys.stdout.flush()
         xc = 0.0
         yc = 0.0
@@ -219,15 +220,15 @@ class Stress:
         sx_core, sy_core, txy_core, sr_core, tt_core = self.sap(xc,yc,
                                                                 param['a'], param['beta1'])
         
-        print header," calculate SAP#1 contribution" # ------------------------------------
+        print( header," calculate SAP#1 contribution" ) # ------------------------------------
         sys.stdout.flush()
         
-        # print header," SAP center ",param['d2']," radius ",param['d1']
+        # print( header," SAP center ",param['d2']," radius ",param['d1'] )
         xc = param['d2']
         yc = 0.0
         sx_sap1, sy_sap1, txy_sap1, sr_sap1, tt_sap1 = self.sap(xc,yc, param['d1'], param['beta3'])
         
-        print header," calculate SAP#2 contribution" # ------------------------------------
+        print( header," calculate SAP#2 contribution" ) # ------------------------------------
         sys.stdout.flush()
         
         xc = -param['d2']
@@ -235,12 +236,12 @@ class Stress:
         sx_sap2, sy_sap2, txy_sap2, sr_sap2, tt_sap2 = self.sap(xc,yc, param['d1'], param['beta3'])
         
         # ------------------------------------
-        print header," calculate Airy stress function (background), N=", N
+        print( header," calculate Airy stress function (background), N=", N )
         sys.stdout.flush()
         self.airy()
         # results: self.sx_a, self.sy_a, self.sr_a, self.tt_a, self.st_a
         
-        print header," calculate total" # ------------------------------------
+        print( header," calculate total" ) # ------------------------------------
         sys.stdout.flush()
         sx  = sx_core + sx_sap1 + sx_sap2 + self.sx_a
         sy  = sy_core + sy_sap1 + sy_sap2 + self.sy_a
@@ -290,16 +291,16 @@ class Stress:
         self.vmin_t = vmin3
         self.vmax_t = vmax3
 
-        print header," x-y val range ",vmin," to ",vmax
-        print header," r val range ",vmin2," to ",vmax2
-        print header," t val range ",vmin3," to ",vmax3
+        print( header," x-y val range ",vmin," to ",vmax )
+        print( header," r val range ",vmin2," to ",vmax2 )
+        print( header," t val range ",vmin3," to ",vmax3 )
 
         self.sx = sx
         self.sy = sy
         self.txy = txy
         
         if save:
-            print header," saving snapshot...."
+            print( header," saving snapshot...." )
             np.save("snapshot", (self.sx, self.sy, self.txy))
         
         #  sx, sy, sr, tt, sr_a, tt_a, vmin, vmax
@@ -471,4 +472,4 @@ class Stress:
 
 # =======================================
 if __name__ == '__main__':
-    print "Test with test_stress.py"
+    print( "Test with test_panda.py" )

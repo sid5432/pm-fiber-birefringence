@@ -1,8 +1,9 @@
 #!/usr/bin/python
-version = "2014-12-04"
+version = "2019-04-28"
 
 changelog = \
 """
+2019-04-28: Modify to work with Python3
 2014-12-04: Add display of shear stress (sigma_xy) in X-Y plot.
 2014-12-03: Fix delta n formula.  Split stress-optic coefficients to C1 and C2, instead of combined
             C=C2-C1.  Update help file with additional references and notes.  Add switch to plot

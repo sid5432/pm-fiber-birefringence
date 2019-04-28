@@ -1,11 +1,17 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+from __future__ import print_function
 # may need these for pyinstaller
 import six
 import numpy as np
-import tkMessageBox
-import FileDialog
+# import tkMessageBox
+# import FileDialog
 
-import tkFileDialog as tkf
+import sys
+if sys.version_info > ( 3, 0 ):
+    import tkinter.filedialog as tkf
+else:
+    import tkFileDialog as tkf
+
 import iniparse
 
 iniFormats = [ 
@@ -20,10 +26,10 @@ def get(filename=None):
         filename = tkf.askopenfilename(filetypes=iniFormats, title='Open parameters file')
     
     if len(filename) <= 0:
-        print header," * Cancel"
+        print( header," * Cancel" )
         return None
     
-    print header," loading configuration from ", filename
+    print( header," loading configuration from ", filename )
     cfg = iniparse.INIConfig( open(filename) )
     
     # NOTE: core is region 1, SAP's are region 3, everywhere else (cladding) is region 2
@@ -60,7 +66,7 @@ def get(filename=None):
     param['theta1'] *= np.pi/180.0 # convert to radians
     
     if param['sap_type'] != 'bow-tie' and param['sap_type'] != 'panda':
-        print header,"!!! Unrecognized SAP type ",param['sap_type']
+        print( header,"!!! Unrecognized SAP type ",param['sap_type'])
 
     # others
     param['N'] = int(cfg.calc.N) # Number of terms to take in Airy function summation
@@ -103,7 +109,7 @@ def save(param, filename=None):
     cfg.geometry.theta1 = param['theta1'] * 180.0/np.pi
     
     if param['sap_type'] != 'panda' and param['sap_type'] != 'bow-tie':
-        print header,"!!! Unrecognized SAP type ",param['sap_type']
+        print( header,"!!! Unrecognized SAP type ",param['sap_type'] )
     
     # order
     cfg.calc.N = param['N'] # Number of terms to take in Airy function summation
@@ -115,15 +121,15 @@ def save(param, filename=None):
         filename = tkf.asksaveasfilename(filetypes=iniFormats, title='Save parameters to file')
     
     if len(filename) <= 0:
-        print header,"* Cancel"
+        print( header,"* Cancel" )
         return False
     
     try:
         f = open(filename,'w')
-        print >>f, cfg
+        print( cfg, file=f )
         f.close()
     except IOError:
-        print header,"! can not save parameters to file"
+        print( header,"! can not save parameters to file" )
     
     return True
 
@@ -133,12 +139,12 @@ if __name__ == '__main__':
     
     param = get(filename)
     
-    print "TEST: material"
-    print "TEST:\tE  = %.3g" % param['E']
-    print "TEST:\tC1 = %.3g" % param['C1']
-    print "TEST:\tC2 = %.3g" % param['C2']
+    print( "TEST: material" )
+    print( "TEST:\tE  = %.3g" % param['E'] )
+    print( "TEST:\tC1 = %.3g" % param['C1'] )
+    print( "TEST:\tC2 = %.3g" % param['C2'] )
     
-    print "TEST:\tSAP type = %s" % param['sap_type']
+    print( "TEST:\tSAP type = %s" % param['sap_type'] )
     
     status = save(param)
     

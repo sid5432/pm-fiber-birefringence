@@ -1,17 +1,27 @@
 #!/usr/bin/python
+from __future__ import print_function
+import sys
 import numpy as np
 import matplotlib
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
+
+# from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+if sys.version_info > ( 3, 0 ):
+    from matplotlib.backends.backend_tkagg import NavigationToolbar2Tk
+    import tkinter as Tk
+    from tkinter import *
+    import tkinter.ttk as ttk
+else:
+    # python 2
+    from matplotlib.backends.backend_tkagg import NavigationToolbar2TkAgg as NavigationToolbar2Tk
+    import Tkinter as Tk
+    from Tkinter import *
+    import ttk
+
 # implement the default mpl key bindings
 from matplotlib.backend_bases import key_press_handler
 from matplotlib.figure import Figure
 import pylab as plt
-
-# python 2
-import Tkinter as Tk
-
-from Tkinter import *
-import ttk
 
 class Display:
     def __init__(self, controller, win_main=""):
@@ -72,11 +82,13 @@ class Display:
         controller.ax_xystress = fig[idx].add_subplot(133, aspect='equal')
         
         canvas.append( FigureCanvasTkAgg(fig[idx], master=frm[self.tab_xy]) )
-        canvas[idx].show()
+        # canvas[idx].show()
+        canvas[idx].draw()
         
         canvas[idx].get_tk_widget().pack( side=TOP )
         
-        NavigationToolbar2TkAgg( canvas[idx], frm[self.tab_xy] ).update()
+        # NavigationToolbar2TkAgg( canvas[idx], frm[self.tab_xy] ).update()
+        NavigationToolbar2Tk( canvas[idx], frm[self.tab_xy] ).update()
         canvas[idx]._tkcanvas.pack(side=TOP, fill=BOTH, expand=1 )
         
         # -----------------------------------------------------------------
@@ -90,11 +102,13 @@ class Display:
         controller.ax_tstress = fig[idx].add_subplot(122, aspect='equal')
         
         canvas.append( FigureCanvasTkAgg(fig[idx], master=frm[self.tab_rtheta]) )
-        canvas[idx].show()
+        # canvas[idx].show()
+        canvas[idx].draw()
         
         canvas[idx].get_tk_widget().pack( side=TOP )
         
-        NavigationToolbar2TkAgg( canvas[idx], frm[self.tab_rtheta] ).update()
+        # NavigationToolbar2TkAgg( canvas[idx], frm[self.tab_rtheta] ).update()
+        NavigationToolbar2Tk( canvas[idx], frm[self.tab_rtheta] ).update()
         canvas[idx]._tkcanvas.pack(side=TOP, fill=BOTH, expand=1 )
         
         # -----------------------------------------------------------------
@@ -107,11 +121,13 @@ class Display:
         controller.ax_bc = fig[idx].add_subplot(111)
         
         canvas.append( FigureCanvasTkAgg(fig[idx], master=frm[self.tab_bc]) )
-        canvas[idx].show()
+        # canvas[idx].show()
+        canvas[idx].draw()
         
         canvas[idx].get_tk_widget().pack( side=TOP )
         
-        NavigationToolbar2TkAgg( canvas[idx], frm[self.tab_bc] ).update()
+        # NavigationToolbar2TkAgg( canvas[idx], frm[self.tab_bc] ).update()
+        NavigationToolbar2Tk( canvas[idx], frm[self.tab_bc] ).update()
         canvas[idx]._tkcanvas.pack(side=TOP, fill=BOTH, expand=1 )
         
         # -----------------------------------------------------------------
@@ -125,11 +141,13 @@ class Display:
         controller.ax_cut2 = fig[idx].add_subplot(122)
         
         canvas.append( FigureCanvasTkAgg(fig[idx], master=frm[self.tab_cut]) )
-        canvas[idx].show()
+        # canvas[idx].show()
+        canvas[idx].draw()
         
         canvas[idx].get_tk_widget().pack( side=TOP )
         
-        NavigationToolbar2TkAgg( canvas[idx], frm[self.tab_cut] ).update()
+        # NavigationToolbar2TkAgg( canvas[idx], frm[self.tab_cut] ).update()
+        NavigationToolbar2Tk( canvas[idx], frm[self.tab_cut] ).update()
         canvas[idx]._tkcanvas.pack(side=TOP, fill=BOTH, expand=1 )
         
         # -----------------------------------------------------------------
@@ -142,11 +160,13 @@ class Display:
         controller.ax_design = fig[idx].add_subplot(111)
         
         canvas.append( FigureCanvasTkAgg(fig[idx], master=frm[self.tab_design]) )
-        canvas[idx].show()
+        # canvas[idx].show()
+        canvas[idx].draw()
         
         canvas[idx].get_tk_widget().pack( side=TOP )
         
-        NavigationToolbar2TkAgg( canvas[idx], frm[self.tab_design] ).update()
+        # NavigationToolbar2TkAgg( canvas[idx], frm[self.tab_design] ).update()
+        NavigationToolbar2Tk( canvas[idx], frm[self.tab_design] ).update()
         canvas[idx]._tkcanvas.pack(side=TOP, fill=BOTH, expand=1 )
         
         # -----------------------------------------------------------------
@@ -159,11 +179,13 @@ class Display:
         controller.ax_el = fig[idx].add_subplot(111, aspect='equal')
         
         canvas.append( FigureCanvasTkAgg(fig[idx], master=frm[self.tab_el]) )
-        canvas[idx].show()
+        # canvas[idx].show()
+        canvas[idx].draw()
         
         canvas[idx].get_tk_widget().pack( side=TOP )
         
-        NavigationToolbar2TkAgg( canvas[idx], frm[self.tab_el] ).update()
+        # NavigationToolbar2TkAgg( canvas[idx], frm[self.tab_el] ).update()
+        NavigationToolbar2Tk( canvas[idx], frm[self.tab_el] ).update()
         canvas[idx]._tkcanvas.pack(side=TOP, fill=BOTH, expand=1 )
         
         # -----------------
@@ -186,31 +208,31 @@ class Display:
         """clear all graphs"""
         header = "clear_all(): "
         
-        print header," x-y plot"
+        print( header," x-y plot" )
         self.controller.ax_xstress.cla()
         self.controller.ax_ystress.cla()
         self.controller.ax_xystress.cla()
         self.controller.ax_xstress.figure.canvas.draw()
         
-        print header," r-theta plot"
+        print( header," r-theta plot" )
         self.controller.ax_rstress.cla()
         self.controller.ax_tstress.cla()
         self.controller.ax_rstress.figure.canvas.draw()
         
-        print header," BC plot"
+        print( header," BC plot" )
         self.controller.ax_bc.cla()
         self.controller.ax_bc.figure.canvas.draw()
         
-        print header," cross-section plot"
+        print( header," cross-section plot" )
         self.controller.ax_cut1.cla()
         self.controller.ax_cut2.cla()
         self.controller.ax_cut1.figure.canvas.draw()
         
-        print header," design plot"
+        print( header," design plot" )
         self.controller.ax_design.cla()
         self.controller.ax_design.figure.canvas.draw()
         
-        print header," tensor visual plot"
+        print( header," tensor visual plot" )
         self.controller.ax_el.cla()
         self.controller.ax_el.figure.canvas.draw()
                 
@@ -269,14 +291,14 @@ if __name__ == '__main__':
     ttk.Button(carea, text='Quit', command=quit).grid( column=0, row=0, sticky=(E,W))
     ttk.Button(carea, text='focus to BC', command=focus).grid( column=0, row=1, sticky=(E,W))
     ttk.Button(carea, text='clear all', command=display.clear_all).grid( column=0, row=2, sticky=(E,W))
-    print "MAIN: got here!"
+    print( "MAIN: got here!" )
     
     # --------------------------- display ---------------
     for child in mf.winfo_children():
-        # print "child ", child
+        # print( "child ", child )
         child.grid_configure(padx=5, pady=5)
         
     root.mainloop()
-    print "MAIN: done!"
+    print( "MAIN: done!" )
     
     sys.exit()

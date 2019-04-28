@@ -1,13 +1,28 @@
 #!/usr/bin/python
+from __future__ import print_function
+import sys
 import time
-from Tkinter import *
-import tkFont
-import ttk
+
+if sys.version_info > ( 3, 0 ):
+    is_python3 = True
+else:
+    is_python3 = False
+
+if is_python3:
+    from tkinter import *
+    import tkinter.ttk as ttk
+    from tkinter import font as tkFont
+    import tkinter.filedialog as tkf
+    import tkinter.messagebox as tkMessageBox
+else:
+    from Tkinter import *
+    import ttk
+    import tkFont
+    import tkFileDialog as tkf
+    import tkMessageBox
+
 # need these for pyinstaller
 import six
-import tkMessageBox
-
-import tkFileDialog as tkf
 
 import numpy as np
 import pylab as plt
@@ -481,7 +496,7 @@ class Controller:
             pass
         
         self.root.destroy()
-        print "* All done!"
+        print( "* All done!" )
         # sys.exit() # force quit!
         
         return
@@ -532,14 +547,14 @@ class Controller:
         param['alpha12'] = self.alpha12_var.get()*1e-6
         param['alpha32'] = self.alpha32_var.get()*1e-6
         
-        print header," DT = %.1f deg C" % param['DT']
-        print header," E  = %.2g N/m^2" % param['E']
-        print header," nu = %.3f" % param['nu']
-        print header," C1 = %.3g m^2/N" % param['C1']
-        print header," C2 = %.3g m^2/N" % param['C2']
-        print header," C  = C2 - C1 = %.3g m^2/N" % param['C']
-        print header," alpha12  = %.3g 1/deg-C" % param['alpha12']
-        print header," alpha32  = %.3g 1/deg-C" % param['alpha32']
+        print( header," DT = %.1f deg C" % param['DT'] )
+        print( header," E  = %.2g N/m^2" % param['E'] )
+        print( header," nu = %.3f" % param['nu'] )
+        print( header," C1 = %.3g m^2/N" % param['C1'] )
+        print( header," C2 = %.3g m^2/N" % param['C2'] )
+        print( header," C  = C2 - C1 = %.3g m^2/N" % param['C'] )
+        print( header," alpha12  = %.3g 1/deg-C" % param['alpha12'] )
+        print( header," alpha32  = %.3g 1/deg-C" % param['alpha32'] )
         
         # derived
         param['beta1'] = (1 + param['nu'])/(1 - param['nu']) * param['alpha12'] # core
@@ -550,8 +565,8 @@ class Controller:
         # everything else is normalized to b!
         param['a']  = 0.5*self.core_var.get()/b # divide by 2 to get radius
         
-        print header," cladding %.2f um" % param['b']
-        print header," normalized core radius a = %.3f" % param['a']
+        print( header," cladding %.2f um" % param['b'] )
+        print( header," normalized core radius a = %.3f" % param['a'] )
         
         # we get *all* geometry values, but don't use all over them later
         param['sap_type'] = self.sap_type_var.get()
@@ -563,12 +578,12 @@ class Controller:
         param['theta1'] = self.theta1_var.get() # degrees
         
         if param['sap_type'] == 'panda':
-            print header," normalized SAP radius d1 = %.3f" % param['d1']
-            print header," normalized SAP center to fiber center d2 = %.3f" % param['d2']
+            print( header," normalized SAP radius d1 = %.3f" % param['d1'] )
+            print( header," normalized SAP center to fiber center d2 = %.3f" % param['d2'] )
         elif param['sap_type'] == 'bow-tie':
-            print header," normalized SAP radius r1 = %.3f" % param['r1']
-            print header," normalized SAP radius r2 = %.3f" % param['r2']
-            print header," normalized SAP half-angle = %.3f deg " % param['theta1']
+            print( header," normalized SAP radius r1 = %.3f" % param['r1'] )
+            print( header," normalized SAP radius r2 = %.3f" % param['r2'] )
+            print( header," normalized SAP half-angle = %.3f deg " % param['theta1'] )
             param['theta1'] *= np.pi/180.0 # degrees to radian
         
         # simulation set up
@@ -610,7 +625,7 @@ class Controller:
         header = "\tcalc_design(): "
         self.note['background'] = '#FFAAAA'
         self.note['text'] = "Calculate optimum stress at core"
-        print header," Calculate stress design..."
+        print( header," Calculate stress design..." )
         sys.stdout.flush()
         
         self.bir = bir.Design(self.param, ax=self.ax_design)
@@ -629,7 +644,7 @@ class Controller:
         
         self.note['background'] = '#FFAAAA'
         self.note['text'] = "Calculate to check boundary condition"
-        print header," Calculate BC matching..."
+        print( header," Calculate BC matching..." )
         sys.stdout.flush()
         
         # if self.bc_stress != None:
@@ -643,13 +658,13 @@ class Controller:
         # plotting BC
         self.note['background'] = '#FFAAAA'
         self.note['text'] = "Plotting boundary"
-        print header," plot boundary"
+        print( header," plot boundary" )
         sys.stdout.flush()
         self.bc_stress.plot_bc( ax=self.ax_bc )
         self.display.tabs.select( self.display.tab_bc )
         
-        print header," BC error s_r ",  np.abs(self.bc_stress.sr).max()
-        print header," BC error tt_r ", np.abs(self.bc_stress.tt).max()
+        print( header," BC error s_r ",  np.abs(self.bc_stress.sr).max() ) 
+        print( header," BC error tt_r ", np.abs(self.bc_stress.tt).max() )
         sys.stdout.flush()
         
         return
@@ -660,7 +675,7 @@ class Controller:
         
         self.note['background'] = '#FFAAAA'
         self.note['text'] = "Calculate stress on disc"
-        print header," Calculate disc..."
+        print( header," Calculate disc...")
         sys.stdout.flush()
         
         # if self.disc_stress != None:
@@ -686,14 +701,14 @@ class Controller:
         else:
             self.disc_stress = panda_fiber.Stress(x,y, param=self.param, save=self.savesnapshot)
         
-        print header," birefringence range ",self.disc_stress.vmin," to ",self.disc_stress.vmax
+        print( header," birefringence range ",self.disc_stress.vmin," to ",self.disc_stress.vmax )
         
         # plotting r-theta
         if self.plot2drt_var.get() == True:
             
             self.note['background'] = '#FFAAAA'
             self.note['text'] = "Plotting in polar-coordinates (please wait....)"
-            print header," plot r-theta stress"
+            print( header," plot r-theta stress")
             sys.stdout.flush()
             
             self.disc_stress.plot_rt( ax1=self.ax_rstress,
@@ -704,7 +719,7 @@ class Controller:
         if self.plot2dxy_var.get() == True:
             self.note['background'] = '#FFAAAA'
             self.note['text'] = "Plotting in X-Y coordinates (please wait...)"
-            print header," plot x-y stress"
+            print( header," plot x-y stress" )
             sys.stdout.flush()
             
             self.disc_stress.plot_xy( ax1=self.ax_xstress, ax2=self.ax_ystress, ax3=self.ax_xystress,
@@ -715,7 +730,7 @@ class Controller:
         if self.plot_el_var.get() == True:
             self.note['background'] = '#FFAAAA'
             self.note['text'] = "Plotting stress tensor visualization (please wait...)"
-            print header," plot stress tensor"
+            print( header," plot stress tensor" )
             sys.stdout.flush()
             
             sx  = self.disc_stress.sx
@@ -734,7 +749,7 @@ class Controller:
         header = "\tcalc_cut(): "
         self.note['background'] = '#FFAAAA'
         self.note['text'] = "Calculate stress along X-Y cross-sections"
-        print header," Calculate stress along X-Y cross-sections..."
+        print( header," Calculate stress along X-Y cross-sections..." )
         sys.stdout.flush()
         
         # parameters for calculating dn;
@@ -806,7 +821,7 @@ class Controller:
         # plot ----------------------------------------------------------------------
         self.note['background'] = '#FFAAAA'
         self.note['text'] = "Plot stress along X-Y cross-sections"
-        print header," Plot stress along X-Y cross-sections..."
+        print( header," Plot stress along X-Y cross-sections...")
         sys.stdout.flush()
         
         self.ax_cut1.cla()
@@ -866,10 +881,10 @@ class Controller:
         r = self.r_var.get()/self.param['b']                                        
         tb = 2.0 * self.bir.best( r ) # tb is now diameter!
         dia = tb * self.param['b']    # convert to mm
-        # print header," DEBUG ",tb, dia
-        print header," For this core/cladding ratio of %.3f" % self.param['a']
-        print header," and r/a of %.3f (fiber center to the edge of the SAP)" % (r/self.param['a'])
-        print header," the best SAP diameter is %.2f mm (preform scale)" % dia
+        # print( header," DEBUG ",tb, dia )
+        print( header," For this core/cladding ratio of %.3f" % self.param['a'] )
+        print( header," and r/a of %.3f (fiber center to the edge of the SAP)" % (r/self.param['a']) )
+        print( header," the best SAP diameter is %.2f mm (preform scale)" % dia )
         
         self.note['background'] = '#AAFFAA'
         self.note['text'] = "Ready"
@@ -888,7 +903,7 @@ class Controller:
     def save_config(self, *args):
         header = "save_config(): "
         
-        print header," saving..."
+        print( header," saving...")
         sys.stdout.flush()
         
         # read parameters from GUI first!
@@ -896,7 +911,7 @@ class Controller:
         
         config.save(self.param)
         
-        print header," done!"
+        print( header," done!"  )
         sys.stdout.flush()
         
         return
@@ -908,7 +923,7 @@ class Controller:
         if newparam == None:
             return
         
-        print header," Load configuration from file"
+        print( header," Load configuration from file" )
         sys.stdout.flush()
         
         param = self.param = newparam
@@ -940,7 +955,7 @@ class Controller:
         # clear all graphs
         self.display.clear_all()
         
-        print header," done!"
+        print( header," done!" )
         sys.stdout.flush()
         
         return
@@ -956,7 +971,7 @@ class Controller:
         filename = "fiber_birefringence.csv"
         filename = tkf.asksaveasfilename(filetypes=svFormats, title='Save to file', initialfile=filename)
         if len(filename) <=0:
-            print pre,"! Canceled"
+            print( pre,"! Canceled" )
             return
         
         # gather parameters
@@ -1002,7 +1017,7 @@ class Controller:
         fmt = '%.5f, %.5f, %.5f, %.5f, %.5f, %.5f, %.5f'
         np.savetxt(filename, data, delimiter=',',
                    fmt=fmt, header=header)
-        print pre," data saved to ",filename
+        print( pre," data saved to ",filename )
         
         return
     
@@ -1166,7 +1181,7 @@ class Controller:
     def calc_tec(self, *args):
         # calculate TEC
         # header = "calc_tec(): "
-        # print header," Estimate thermal expansion coefficient"
+        # print( header," Estimate thermal expansion coefficient" )
         
         s0 = self.tec_si_var.get()
         
@@ -1193,7 +1208,7 @@ class Controller:
     # ----------------------------------------
     def get_tec(self, material):
         header = "get_tec(): "
-        # print header," ",material
+        # print( header," ",material )
         self.calc_tec()
         
         if material == 'b2o3':
@@ -1203,7 +1218,7 @@ class Controller:
         elif material == 'p2o5':
             x = self.mix_p2o5_var.get()
         else:
-            print header,"Un-recognized material ",material
+            print( header,"Un-recognized material ",material )
             return None
         
         si = self.tec_si_var.get()
@@ -1247,8 +1262,8 @@ class Controller:
 # =================================================================================
 if __name__ == '__main__':
     if len(sys.argv) >= 2 and sys.argv[1]=='-h':
-        print "USAGE: ",sys.argv[0]," [save]"
-        print "\tsave snapshot if 'save' is set to 1"
+        print( "USAGE: ",sys.argv[0]," [save]" )
+        print( "\tsave snapshot if 'save' is set to 1" )
         sys.exit()
     
     if len(sys.argv)>=2:
@@ -1257,17 +1272,17 @@ if __name__ == '__main__':
         save = False
     
     # create log file
-    print "* Create/open log file"
+    print( "* Create/open log file" )
     try:
         logfile = open("logfile.txt","w")
     except IOError:
-        print "Error creating log file logfile.txt"
+        print( "Error creating log file logfile.txt" )
         logfile = None
     
-    print "* Initializing; please wait...."
+    print( "* Initializing; please wait...." )
     control = Controller(save=save)
     
-    print "* Main loop closed. Bye!"
+    print( "* Main loop closed. Bye!" )
     
     sys.exit()
     

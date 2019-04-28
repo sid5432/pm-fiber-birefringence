@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # Reference: see info in help.py;
 # this module implements the stress calculation of bow-tie fibers
+from __future__ import print_function
 import numpy as np
 import sys
 import pylab as plt
@@ -415,28 +416,28 @@ class Stress:
         N = param['N']
         blank_outside=self.blank_outside
         
-        print header," calculate core contribution" # ------------------------------------
+        print( header," calculate core contribution" ) # ------------------------------------
         sys.stdout.flush()
         xc = 0.0
         yc = 0.0
         # param['beta'] = param['beta1']
         sx_core, sy_core, txy_core, sr_core, tt_core = self.core()
         
-        print header," calculate bow-tie SAP contribution" # ------------------------------------
+        print( header," calculate bow-tie SAP contribution" ) # ------------------------------------
         sys.stdout.flush()
         
-        # print header," SAP center ",param['d2']," radius ",param['d1']
+        # print( header," SAP center ",param['d2']," radius ",param['d1'] )
         xc = param['d2']
         yc = 0.0
         sx_sap, sy_sap, txy_sap, sr_sap, tt_sap = self.sap()
         
         # ------------------------------------
-        print header," calculate Airy stress function (background), N=", N
+        print( header," calculate Airy stress function (background), N=", N )
         sys.stdout.flush()
         self.airy()
         # results: self.sx_a, self.sy_a, self.sr_a, self.tt_a, self.st_a
         
-        print header," calculate total" # ------------------------------------
+        print( header," calculate total" ) # ------------------------------------
         sys.stdout.flush()
         sx  = sx_core + sx_sap + self.sx_a
         sy  = sy_core + sy_sap + self.sy_a
@@ -536,9 +537,9 @@ class Stress:
         self.vmin_t = vmin3
         self.vmax_t = vmax3
         
-        print header," clipped x-y val range ",vmin," to ",vmax
-        print header," clipped r val range ",vmin2," to ",vmax2
-        print header," clipped t val range ",vmin3," to ",vmax3
+        print( header," clipped x-y val range ",vmin," to ",vmax )
+        print( header," clipped r val range ",vmin2," to ",vmax2 )
+        print( header," clipped t val range ",vmin3," to ",vmax3 )
         sys.stdout.flush()
         
         self.sx = sx
@@ -546,7 +547,7 @@ class Stress:
         self.txy = txy
         
         if save:
-            print header," saving snapshot...."
+            print( header," saving snapshot...." )
             np.save("snapshot", (self.sx, self.sy, self.txy))
         
         #  sx, sy, sr, tt, sr_a, tt_a, vmin, vmax
@@ -728,4 +729,4 @@ class Stress:
 
 # =======================================
 if __name__ == '__main__':
-    print "Test with test_stress2.py"
+    print( "Test with test_bowtie.py" )

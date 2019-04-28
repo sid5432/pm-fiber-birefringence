@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+from __future__ import print_function
 import numpy as np;
 import pylab as plt
 import config
@@ -48,7 +49,7 @@ class Design:
             A = 2.0*ra*ab;
             # Alist = [ 1.0, A, A*A, A*A*A, A*A*A*A, A*A*A*A*A ]
             
-            print header," calculate birefringe for r/a = ",ra;
+            print( header," calculate birefringe for r/a = ",ra )
             x1.append( np.arange(0, 0.9, 0.01) )
             y1.append( np.array([func1( x, A, B_c) for x in x1[idx]]) )
             idx += 1
@@ -60,7 +61,7 @@ class Design:
         # ------- max curve ---------
         x2 = []
         y2 = []
-        print header," calculate maxima curve"
+        print( header," calculate maxima curve" )
         for ra in np.arange(2.8, 5.5, 0.1 ):
             A = 2.0*ra*ab;
             pp = poly1(A)
@@ -125,10 +126,10 @@ class Design:
     def plot(self):
         header = "bir.Design.plot(): "
         if self.ax == None:
-            print header," plotting axis not defined; aborting"
+            print( header," plotting axis not defined; aborting")
             return
         
-        print header," generating birefingence vs. SAP diameter plot"
+        print( header," generating birefingence vs. SAP diameter plot" )
         self.ax.cla()
         self.ax.set_xlabel("Normalized SAP diameter t/b")
         self.ax.set_ylabel(r'Modal birefringence B ($\times 10^{-4}$)')
@@ -157,32 +158,32 @@ if __name__ == '__main__':
     import sys
     
     cfgfile = "lib/test1.ini"
-    print "TEST: Using configuration file ",cfgfile
+    print( "TEST: Using configuration file ",cfgfile )
     sys.stdout.flush()
     param = config.get(cfgfile)
-    print "TEST: E = %.1e" % param['E']
-    print "TEST: nu = %.3f" % param['nu']
-    print "TEST: Delta alpha = %.3g" % param['alpha32']
-    print "TEST: C = %.3g" % param['C']
-    print "TEST: DT = %.1f" % param['DT']
-    print "TEST: a = %.1f" % param['a']
+    print( "TEST: E = %.1e" % param['E'] )
+    print( "TEST: nu = %.3f" % param['nu'] )
+    print( "TEST: Delta alpha = %.3g" % param['alpha32'] )
+    print( "TEST: C = %.3g" % param['C'] )
+    print( "TEST: DT = %.1f" % param['DT'] )
+    print( "TEST: a = %.1f" % param['a'] )
     
-    print "TEST: setting up plotting area..."
+    print( "TEST: setting up plotting area..." )
     sys.stdout.flush()
     
     fig1 = plt.figure("Birefringence", figsize=(10,6))
     ax1 = fig1.add_subplot(111)
     
-    print "TEST: calculating..."
+    print( "TEST: calculating..." )
     sys.stdout.flush()
     
     bir = Design(param, ax=ax1)
     
     r = 3.0*param['a']
     tb = 2.0*bir.best( r ) # NOTE: return is radius!
-    print "TEST: est best pick for r = 3a is t/b = %.3f" % tb
+    print( "TEST: est best pick for r = 3a is t/b = %.3f" % tb )
     
-    print "TEST: calculations done! Now plotting..."
+    print( "TEST: calculations done! Now plotting..." )
     sys.stdout.flush()
     
     bir.plot()

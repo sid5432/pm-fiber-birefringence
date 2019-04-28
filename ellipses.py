@@ -1,6 +1,12 @@
 #!/usr/bin/python
 # plot stress/strain tensor as ellipses
+from __future__ import print_function
 import sys
+if sys.version_info > ( 3, 0 ):
+    is_python3 = True
+else:
+    is_python3 = False
+    
 import numpy as np
 import pylab as plt
 from matplotlib.patches import Ellipse
@@ -29,7 +35,11 @@ def plot( sxr, syr, txyr, rext=1.1, ax=None, color='volume',
     
     if ax != None:
         ax.cla()
-        ax.set_axis_bgcolor('#222222')
+        if is_python3:
+            ax.set_facecolor('#222222')
+        else:
+            ax.set_axis_bgcolor('#222222')
+        
         # ax.figure.patch.set_facecolor('blue') # set surrounding
         
         # gradient
@@ -53,7 +63,7 @@ def plot( sxr, syr, txyr, rext=1.1, ax=None, color='volume',
         zmap = sy
         label = r'$\sigma_y$'
     else:
-        print header," unrecognized color mapping ",color,"; using sx+sy"
+        print( header," unrecognized color mapping ",color,"; using sx+sy" )
     
     if ax != None:
         ax.set_title("Stress distribution; color represents "+label)
@@ -75,14 +85,14 @@ def plot( sxr, syr, txyr, rext=1.1, ax=None, color='volume',
     # but this is not important as far as depicting the ellipses
     # is concerned.
     #
-    # print "DEBUG: th range ",th.min()," to ",th.max()
+    # print( "DEBUG: th range ",th.min()," to ",th.max() )
     
     # for Ellipse we need to use degrees!
     ang = (180.0/np.pi) * th
     
-    # print "DEBUG: th range ",th.min(), th.max()
-    # print "DEBUG: ev1 range ",ev1.min(), ev1.max()
-    # print "DEBUG: ev2 range ",ev2.min(), ev2.max()
+    # print( "DEBUG: th range ",th.min(), th.max() )
+    # print( "DEBUG: ev1 range ",ev1.min(), ev1.max() )
+    # print( "DEBUG: ev2 range ",ev2.min(), ev2.max() )
     emax = np.abs(ev1).max()
     tmp  = np.abs(ev2).max()
     if emax < tmp:
@@ -116,14 +126,14 @@ def plot( sxr, syr, txyr, rext=1.1, ax=None, color='volume',
     ax.set_ylim( -rext, rext )
     
     for i in range(len(w[0])):
-        # print "point-0 ",w[0]
-        # print "point-1 ",w[1]
+        # print( "point-0 ",w[0] )
+        # print( "point-1 ",w[1] )
         ix = w[0][i]
         iy = w[1][i]
         xp = x[ix,iy]
         yp = y[ix,iy]
         zp = zmap[ix,iy]
-        # print "coord x=", xp," y=",yp," z=",zp
+        # print( "coord x=", xp," y=",yp," z=",zp )
         angle = ang[ix,iy]
         
         # NOTE: concerning the sign of stress, etc., see notes
@@ -144,7 +154,7 @@ def plot( sxr, syr, txyr, rext=1.1, ax=None, color='volume',
 # ==============================================================
 if __name__ == '__main__':
     sx,sy,txy = np.load("tests/snapshot.npy")
-    print "TEST: recover shape ", sx.shape, sy.shape, txy.shape
+    print( "TEST: recover shape ", sx.shape, sy.shape, txy.shape )
     
     fig = plt.figure("TEST", figsize=(15,8))
     # ax1 = fig.add_subplot(111, aspect='equal', axisbg='black')
